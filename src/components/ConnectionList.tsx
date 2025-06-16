@@ -11,8 +11,14 @@ import {
   Button,
   Box,
   Tooltip,
+  Snackbar,
+  Alert,
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  ContentCopy as ContentCopyIcon,
+} from '@mui/icons-material';
 import { Connection } from '@/types/connection';
 
 interface ConnectionListProps {
@@ -30,8 +36,41 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
   onDelete,
   onAdd,
 }) => {
+  const [snackbar, setSnackbar] = React.useState({
+    open: false,
+    message: '',
+    severity: 'success' as 'success' | 'error',
+  });
+
   const getDatasetNames = (knowledgeIds: string[]) => {
     return knowledgeIds.map((id) => datasetMap[id] || id).join(', ');
+  };
+
+  const generateCurl = (connectionId: number) => {
+    const apiUrl = import.meta.env.VITE_CONNECTION_API_URL;
+    const domain = new URL(apiUrl).origin;
+
+    const curlCommand = `curl -X 'POST' \\\n  '${domain}/api/dify/retrieveChunks' \\\n  -H 'accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  "query": "hi",\n  "top_k": 3,\n  "connection_id": ${connectionId}\n}'`;
+
+    return curlCommand;
+  };
+
+  const handleCopyCurl = async (connectionId: number) => {
+    try {
+      const curlCommand = generateCurl(connectionId);
+      await navigator.clipboard.writeText(curlCommand);
+      setSnackbar({
+        open: true,
+        message: 'Đã copy cURL command vào clipboard',
+        severity: 'success',
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: 'Không thể copy cURL command',
+        severity: 'error',
+      });
+    }
   };
 
   return (
@@ -71,24 +110,52 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
                   {new Date(connection.created_at).toLocaleString()}
                 </TableCell>
                 <TableCell>
-                  <IconButton
-                    onClick={() => onEdit(connection)}
-                    color="primary"
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => onDelete(connection.id)}
-                    color="error"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  <Tooltip title="Copy cURL">
+                    <IconButton
+                      onClick={() => handleCopyCurl(connection.id)}
+                      color="default"
+                      size="small"
+                    >
+                      <ContentCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Chỉnh sửa">
+                    <IconButton
+                      onClick={() => onEdit(connection)}
+                      color="primary"
+                      size="small"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Xóa">
+                    <IconButton
+                      onClick={() => onDelete(connection.id)}
+                      color="error"
+                      size="small"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert
+          severity={snackbar.severity}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
