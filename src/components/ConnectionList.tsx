@@ -10,12 +10,14 @@ import {
   IconButton,
   Button,
   Box,
+  Tooltip,
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { Connection } from '@/types/connection';
 
 interface ConnectionListProps {
   connections: Connection[];
+  datasetMap: Record<string, string>;
   onEdit: (connection: Connection) => void;
   onDelete: (id: number) => void;
   onAdd: () => void;
@@ -23,10 +25,15 @@ interface ConnectionListProps {
 
 export const ConnectionList: React.FC<ConnectionListProps> = ({
   connections,
+  datasetMap,
   onEdit,
   onDelete,
   onAdd,
 }) => {
+  const getDatasetNames = (knowledgeIds: string[]) => {
+    return knowledgeIds.map((id) => datasetMap[id] || id).join(', ');
+  };
+
   return (
     <Box>
       <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
@@ -41,7 +48,7 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
               <TableCell>ID</TableCell>
               <TableCell>Tên</TableCell>
               <TableCell>Customer ID</TableCell>
-              <TableCell>Knowledge IDs</TableCell>
+              <TableCell>Knowledge</TableCell>
               <TableCell>Ngày tạo</TableCell>
               <TableCell>Thao tác</TableCell>
             </TableRow>
@@ -52,20 +59,27 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
                 <TableCell>{connection.id}</TableCell>
                 <TableCell>{connection.name}</TableCell>
                 <TableCell>{connection.customer_id}</TableCell>
-                <TableCell>{connection.knowledge_ids.join(', ')}</TableCell>
                 <TableCell>
-                  {new Date(connection.created_at).toLocaleDateString()}
+                  <Tooltip
+                    title={getDatasetNames(connection.knowledge_ids)}
+                    arrow
+                  >
+                    <span>{getDatasetNames(connection.knowledge_ids)}</span>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  {new Date(connection.created_at).toLocaleString()}
                 </TableCell>
                 <TableCell>
                   <IconButton
-                    color="primary"
                     onClick={() => onEdit(connection)}
+                    color="primary"
                   >
                     <EditIcon />
                   </IconButton>
                   <IconButton
-                    color="error"
                     onClick={() => onDelete(connection.id)}
+                    color="error"
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -77,4 +91,4 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
       </TableContainer>
     </Box>
   );
-}; 
+};

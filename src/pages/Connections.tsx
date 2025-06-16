@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { ConnectionList } from '@/components/ConnectionList';
 import { ConnectionForm } from '@/components/ConnectionForm';
 import { connectionService } from '@/services/connection.service';
+import { difyService } from '@/services/dify.service';
 import { Connection, CreateConnectionDTO, UpdateConnectionDTO } from '@/types/connection';
 
 export const Connections: React.FC = () => {
@@ -18,9 +19,21 @@ export const Connections: React.FC = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: connections = [], isLoading, error } = useQuery('connections', () =>
+  const { data: connections = [], isLoading: isLoadingConnections } = useQuery('connections', () =>
     connectionService.getAll()
   );
+
+  const { data: datasets = [], isLoading: isLoadingDatasets } = useQuery('datasets', () =>
+    difyService.getAllDataset()
+  );
+
+  // Create a map of dataset IDs to names for easy lookup
+  const datasetMap = React.useMemo(() => {
+    return datasets.reduce((acc, dataset) => {
+      acc[dataset.id] = dataset.name;
+      return acc;
+    }, {} as Record<string, string>);
+  }, [datasets]);
 
   const createMutation = useMutation(connectionService.create, {
     onSuccess: () => {
@@ -100,7 +113,7 @@ export const Connections: React.FC = () => {
     }
   };
 
-  const handleSubmit = (data: CreateConnectionDTO | UpdateConnectionDTO) => {
+  const handleSubmit = async (data: CreateConnectionDTO | UpdateConnectionDTO) => {
     if (isEdit && selectedConnection) {
       updateMutation.mutate({ id: selectedConnection.id, data: data as UpdateConnectionDTO });
     } else {
@@ -108,12 +121,10 @@ export const Connections: React.FC = () => {
     }
   };
 
-  if (isLoading) {
-    return <Typography>Đang tải...</Typography>;
-  }
+  const isLoading = isLoadingConnections || isLoadingDatasets;
 
-  if (error) {
-    return <Typography color="error">Có lỗi xảy ra khi tải dữ liệu</Typography>;
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
   }
 
   return (
@@ -124,12 +135,11 @@ export const Connections: React.FC = () => {
 
       <ConnectionList
         connections={connections}
-        onAdd={handleAdd}
+        datasetMap={datasetMap}
         onEdit={handleEdit}
         onDelete={handleDelete}
-      />
-
-      <ConnectionForm
+        onAdd={handleAdd}
+      />      <ConnectionForm
         open={isFormOpen}
         onClose={() => setIsFormOpen(false)}
         onSubmit={handleSubmit}
@@ -139,17 +149,11 @@ export const Connections: React.FC = () => {
 
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
       >
-        <Alert
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
+        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
       </Snackbar>
     </Container>
   );
-}; 
+};

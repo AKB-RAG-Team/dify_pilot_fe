@@ -7,7 +7,7 @@ const apiDify = getApiInstance('dify');
 export const difyService = {
     getAllDataset: async (customerId?: string): Promise<Dataset[]> => {
         const params = customerId ? { customer_id: customerId } : {};
-        const response = await apiDify.get(API_URL, { params });
+        const response = await apiDify.get(`${API_URL}/datasets`, { params });
         return response.data.data;
     }
   }; 

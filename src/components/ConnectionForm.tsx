@@ -7,8 +7,17 @@ import {
   TextField,
   Button,
   Box,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  Checkbox,
+  OutlinedInput 
 } from '@mui/material';
 import { Connection, CreateConnectionDTO, UpdateConnectionDTO } from '@/types/connection';
+import { useQuery } from 'react-query';
+import { difyService } from '@/services/dify.service';
 
 interface ConnectionFormProps {
   open: boolean;
@@ -25,21 +34,23 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
   connection,
   isEdit = false,
 }) => {
-  const [formData, setFormData] = React.useState<CreateConnectionDTO | UpdateConnectionDTO>({
-    name: connection?.name || '',
-    customer_id: connection?.customer_id || '',
-    knowledge_ids: connection?.knowledge_ids || [],
-  });
+  const { data: datasets = [] } = useQuery('datasets', () => difyService.getAllDataset());
 
+  const [formData, setFormData] = React.useState<CreateConnectionDTO | UpdateConnectionDTO>({
+    name: '',
+    customer_id: '',
+    knowledge_ids: [],
+  });
+  // Reset form data when dialog opens or connection changes
   React.useEffect(() => {
-    if (connection) {
+    if (open) {
       setFormData({
-        name: connection.name,
-        customer_id: connection.customer_id,
-        knowledge_ids: connection.knowledge_ids,
+        name: connection?.name || '',
+        customer_id: connection?.customer_id || '',
+        knowledge_ids: connection?.knowledge_ids || []
       });
     }
-  }, [connection]);
+  }, [open, connection]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -80,30 +91,45 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
                 fullWidth
               />
             )}
-            <TextField
-              name="knowledge_ids"
-              label="Knowledge IDs (phân cách bằng dấu phẩy)"
-              value={formData.knowledge_ids?.join(', ') || ''}
-              onChange={(e) => {
-                const value = e.target.value;
-                setFormData((prev) => ({
-                  ...prev,
-                  knowledge_ids: value
-                    ? value.split(',').map((id) => id.trim())
-                    : [],
-                }));
-              }}
-              fullWidth
-            />
+            <FormControl fullWidth>
+              <InputLabel id="knowledge-select-label">Knowledge</InputLabel>
+              <Select
+                labelId="knowledge-select-label"
+                id="knowledge-select"
+                multiple
+                value={formData.knowledge_ids}
+                input={<OutlinedInput label="Knowledge" />}
+                onChange={(e) => {
+                  const value = e.target.value as string[];
+                  setFormData((prev) => ({
+                    ...prev,
+                    knowledge_ids: value,
+                  }));
+                }}
+                renderValue={(selected) => {
+                  const selectedNames = selected.map(id =>
+                    datasets.find(d => String(d.id) === String(id))?.name || id
+                  );
+                  return selectedNames.join(', ');
+                }}
+              >
+                {datasets.map((dataset) => (
+                  <MenuItem key={dataset.id} value={dataset.id}>
+                    <Checkbox checked={(formData.knowledge_ids ?? []).indexOf(String(dataset.id)) > -1} />
+                    <ListItemText primary={dataset.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Hủy</Button>
           <Button type="submit" variant="contained" color="primary">
-            {isEdit ? 'Cập nhật' : 'Thêm mới'}
+            {isEdit ? 'Cập nhật' : 'Thêm'}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
   );
-}; 
+};
