@@ -58,7 +58,22 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
   const handleCopyCurl = async (connectionId: number) => {
     try {
       const curlCommand = generateCurl(connectionId);
-      await navigator.clipboard.writeText(curlCommand);
+      console.log('Generated cURL command:', curlCommand);
+      
+      try {
+        await navigator.clipboard.writeText(curlCommand);
+        console.log('cURL command copied to clipboard');
+      } catch (clipboardError) {
+        console.log('Clipboard API not available, creating temp input element');
+        // Fallback: Create temporary input element
+        const tempInput = document.createElement('input');
+        tempInput.value = curlCommand;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+      }
+      
       setSnackbar({
         open: true,
         message: 'Đã copy cURL command vào clipboard',

@@ -6,7 +6,6 @@ import {
   Typography,
   Tabs,
   Tab,
-  Box,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { NAV_ITEMS } from '@/config/navigation.config';
