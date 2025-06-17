@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Folder as FolderIcon } from "@mui/icons-material";
 import { Dataset } from "@/types/dify";
+import { useTranslation } from "react-i18next";
 
 interface DatasetListProps {
   datasets: Dataset[];
@@ -40,11 +41,11 @@ export const DatasetList: React.FC<DatasetListProps> = ({
       </Paper>
     );
   }
-
+  const { t } = useTranslation();
   return (
     <Paper sx={{ p: 3 }}>
       <Typography variant="h6" gutterBottom>
-        Danh sách Knowledge Base ({datasets.length})
+        {t("files.list")}({datasets.length})
       </Typography>
 
       <Grid container spacing={2}>

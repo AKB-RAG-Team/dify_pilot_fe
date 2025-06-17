@@ -1,30 +1,40 @@
-import React from 'react';
-import { Container, Typography, Alert, Snackbar } from '@mui/material';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { ConnectionList } from '@/components/ConnectionList';
-import { ConnectionForm } from '@/components/ConnectionForm';
-import { connectionService } from '@/services/connection.service';
-import { difyService } from '@/services/dify.service';
-import { Connection, CreateConnectionDTO, UpdateConnectionDTO } from '@/types/connection';
+import React from "react";
+import { Container, Typography, Alert, Snackbar } from "@mui/material";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { ConnectionList } from "@/components/ConnectionList";
+import { ConnectionForm } from "@/components/ConnectionForm";
+import { connectionService } from "@/services/connection.service";
+import { difyService } from "@/services/dify.service";
+import {
+  Connection,
+  CreateConnectionDTO,
+  UpdateConnectionDTO,
+} from "@/types/connection";
+import { useTranslation } from "react-i18next";
 
 export const Connections: React.FC = () => {
-  const [selectedConnection, setSelectedConnection] = React.useState<Connection | undefined>();
+  const [selectedConnection, setSelectedConnection] = React.useState<
+    Connection | undefined
+  >();
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
   const [snackbar, setSnackbar] = React.useState({
     open: false,
-    message: '',
-    severity: 'success' as 'success' | 'error',
+    message: "",
+    severity: "success" as "success" | "error",
   });
+  const { t } = useTranslation();
 
   const queryClient = useQueryClient();
 
-  const { data: connections = [], isLoading: isLoadingConnections } = useQuery('connections', () =>
-    connectionService.getAll()
+  const { data: connections = [], isLoading: isLoadingConnections } = useQuery(
+    "connections",
+    () => connectionService.getAll()
   );
 
-  const { data: datasets = [], isLoading: isLoadingDatasets } = useQuery('datasets', () =>
-    difyService.getAllDataset()
+  const { data: datasets = [], isLoading: isLoadingDatasets } = useQuery(
+    "datasets",
+    () => difyService.getAllDataset()
   );
 
   // Create a map of dataset IDs to names for easy lookup
@@ -37,19 +47,19 @@ export const Connections: React.FC = () => {
 
   const createMutation = useMutation(connectionService.create, {
     onSuccess: () => {
-      queryClient.invalidateQueries('connections');
+      queryClient.invalidateQueries("connections");
       setSnackbar({
         open: true,
-        message: 'Thêm connection thành công',
-        severity: 'success',
+        message: "Thêm connection thành công",
+        severity: "success",
       });
       setIsFormOpen(false);
     },
     onError: () => {
       setSnackbar({
         open: true,
-        message: 'Có lỗi xảy ra khi thêm connection',
-        severity: 'error',
+        message: "Có lỗi xảy ra khi thêm connection",
+        severity: "error",
       });
     },
   });
@@ -59,19 +69,19 @@ export const Connections: React.FC = () => {
       connectionService.update(id, data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('connections');
+        queryClient.invalidateQueries("connections");
         setSnackbar({
           open: true,
-          message: 'Cập nhật connection thành công',
-          severity: 'success',
+          message: "Cập nhật connection thành công",
+          severity: "success",
         });
         setIsFormOpen(false);
       },
       onError: () => {
         setSnackbar({
           open: true,
-          message: 'Có lỗi xảy ra khi cập nhật connection',
-          severity: 'error',
+          message: "Có lỗi xảy ra khi cập nhật connection",
+          severity: "error",
         });
       },
     }
@@ -79,18 +89,18 @@ export const Connections: React.FC = () => {
 
   const deleteMutation = useMutation(connectionService.delete, {
     onSuccess: () => {
-      queryClient.invalidateQueries('connections');
+      queryClient.invalidateQueries("connections");
       setSnackbar({
         open: true,
-        message: 'Xóa connection thành công',
-        severity: 'success',
+        message: "Xóa connection thành công",
+        severity: "success",
       });
     },
     onError: () => {
       setSnackbar({
         open: true,
-        message: 'Có lỗi xảy ra khi xóa connection',
-        severity: 'error',
+        message: "Có lỗi xảy ra khi xóa connection",
+        severity: "error",
       });
     },
   });
@@ -108,14 +118,19 @@ export const Connections: React.FC = () => {
   };
 
   const handleDelete = (id: number) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa connection này?')) {
+    if (window.confirm("Bạn có chắc chắn muốn xóa connection này?")) {
       deleteMutation.mutate(id);
     }
   };
 
-  const handleSubmit = async (data: CreateConnectionDTO | UpdateConnectionDTO) => {
+  const handleSubmit = async (
+    data: CreateConnectionDTO | UpdateConnectionDTO
+  ) => {
     if (isEdit && selectedConnection) {
-      updateMutation.mutate({ id: selectedConnection.id, data: data as UpdateConnectionDTO });
+      updateMutation.mutate({
+        id: selectedConnection.id,
+        data: data as UpdateConnectionDTO,
+      });
     } else {
       createMutation.mutate(data as CreateConnectionDTO);
     }
@@ -130,23 +145,22 @@ export const Connections: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Quản lý Connections
+        {t("nav.connections")}
       </Typography>
-
       <ConnectionList
         connections={connections}
         datasetMap={datasetMap}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onAdd={handleAdd}
-      />      <ConnectionForm
+      />{" "}
+      <ConnectionForm
         open={isFormOpen}
         onClose={() => setIsFormOpen(false)}
         onSubmit={handleSubmit}
         connection={selectedConnection}
         isEdit={isEdit}
       />
-
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}

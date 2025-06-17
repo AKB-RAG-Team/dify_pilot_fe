@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Table,
   TableBody,
@@ -13,13 +13,14 @@ import {
   Tooltip,
   Snackbar,
   Alert,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   ContentCopy as ContentCopyIcon,
-} from '@mui/icons-material';
-import { Connection } from '@/types/connection';
+} from "@mui/icons-material";
+import { Connection } from "@/types/connection";
+import { useTranslation } from "react-i18next";
 
 interface ConnectionListProps {
   connections: Connection[];
@@ -38,12 +39,12 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
 }) => {
   const [snackbar, setSnackbar] = React.useState({
     open: false,
-    message: '',
-    severity: 'success' as 'success' | 'error',
+    message: "",
+    severity: "success" as "success" | "error",
   });
-
+  const { t } = useTranslation();
   const getDatasetNames = (knowledgeIds: string[]) => {
-    return knowledgeIds.map((id) => datasetMap[id] || id).join(', ');
+    return knowledgeIds.map((id) => datasetMap[id] || id).join(", ");
   };
 
   const generateCurl = (connectionId: number) => {
@@ -58,41 +59,41 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
   const handleCopyCurl = async (connectionId: number) => {
     try {
       const curlCommand = generateCurl(connectionId);
-      console.log('Generated cURL command:', curlCommand);
-      
+      console.log("Generated cURL command:", curlCommand);
+
       try {
         await navigator.clipboard.writeText(curlCommand);
-        console.log('cURL command copied to clipboard');
+        console.log("cURL command copied to clipboard");
       } catch (clipboardError) {
-        console.log('Clipboard API not available, creating temp input element');
+        console.log("Clipboard API not available, creating temp input element");
         // Fallback: Create temporary input element
-        const tempInput = document.createElement('input');
+        const tempInput = document.createElement("input");
         tempInput.value = curlCommand;
         document.body.appendChild(tempInput);
         tempInput.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         document.body.removeChild(tempInput);
       }
-      
+
       setSnackbar({
         open: true,
-        message: 'Đã copy cURL command vào clipboard',
-        severity: 'success',
+        message: "Đã copy cURL command vào clipboard",
+        severity: "success",
       });
     } catch (error) {
       setSnackbar({
         open: true,
-        message: 'Không thể copy cURL command',
-        severity: 'error',
+        message: "Không thể copy cURL command",
+        severity: "error",
       });
     }
   };
 
   return (
     <Box>
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+      <Box sx={{ mb: 2, display: "flex", justifyContent: "flex-end" }}>
         <Button variant="contained" color="primary" onClick={onAdd}>
-          Thêm Connection
+          {t("connection.addConnection")}
         </Button>
       </Box>
       <TableContainer component={Paper}>
@@ -100,11 +101,11 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Tên</TableCell>
-              <TableCell>Customer ID</TableCell>
-              <TableCell>Knowledge</TableCell>
-              <TableCell>Ngày tạo</TableCell>
-              <TableCell>Thao tác</TableCell>
+              <TableCell>{t("connection.name")}</TableCell>
+              <TableCell>{t("connection.customerID")}</TableCell>
+              <TableCell>{t("connection.knowledge")}</TableCell>
+              <TableCell>{t("connection.createdAt")}</TableCell>
+              <TableCell>{t("connection.action")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -125,7 +126,7 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
                   {new Date(connection.created_at).toLocaleString()}
                 </TableCell>
                 <TableCell>
-                  <Tooltip title="Copy cURL">
+                  <Tooltip title="Copy CURL">
                     <IconButton
                       onClick={() => handleCopyCurl(connection.id)}
                       color="default"
@@ -134,7 +135,7 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
                       <ContentCopyIcon />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Chỉnh sửa">
+                  <Tooltip title={t("connection.update")}>
                     <IconButton
                       onClick={() => onEdit(connection)}
                       color="primary"
@@ -143,7 +144,7 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Xóa">
+                  <Tooltip title={t("connection.delete")}>
                     <IconButton
                       onClick={() => onDelete(connection.id)}
                       color="error"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,11 +13,16 @@ import {
   InputLabel,
   ListItemText,
   Checkbox,
-  OutlinedInput 
-} from '@mui/material';
-import { Connection, CreateConnectionDTO, UpdateConnectionDTO } from '@/types/connection';
-import { useQuery } from 'react-query';
-import { difyService } from '@/services/dify.service';
+  OutlinedInput,
+} from "@mui/material";
+import {
+  Connection,
+  CreateConnectionDTO,
+  UpdateConnectionDTO,
+} from "@/types/connection";
+import { useQuery } from "react-query";
+import { difyService } from "@/services/dify.service";
+import { useTranslation } from "react-i18next";
 
 interface ConnectionFormProps {
   open: boolean;
@@ -34,20 +39,26 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
   connection,
   isEdit = false,
 }) => {
-  const { data: datasets = [] } = useQuery('datasets', () => difyService.getAllDataset());
+  const { data: datasets = [] } = useQuery("datasets", () =>
+    difyService.getAllDataset()
+  );
 
-  const [formData, setFormData] = React.useState<CreateConnectionDTO | UpdateConnectionDTO>({
-    name: '',
-    customer_id: '',
+  const { t } = useTranslation();
+
+  const [formData, setFormData] = React.useState<
+    CreateConnectionDTO | UpdateConnectionDTO
+  >({
+    name: "",
+    customer_id: "",
     knowledge_ids: [],
   });
   // Reset form data when dialog opens or connection changes
   React.useEffect(() => {
     if (open) {
       setFormData({
-        name: connection?.name || '',
-        customer_id: connection?.customer_id || '',
-        knowledge_ids: connection?.knowledge_ids || []
+        name: connection?.name || "",
+        customer_id: connection?.customer_id || "",
+        knowledge_ids: connection?.knowledge_ids || [],
       });
     }
   }, [open, connection]);
@@ -68,14 +79,16 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
-        {isEdit ? 'Chỉnh sửa Connection' : 'Thêm Connection mới'}
+        {isEdit
+          ? t("connection.update_connection")
+          : t("connection.add_new_connection")}
       </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               name="name"
-              label="Tên"
+              label={t("connection.name")}
               value={formData.name}
               onChange={handleChange}
               required
@@ -84,7 +97,7 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
             {!isEdit && (
               <TextField
                 name="customer_id"
-                label="Customer ID"
+                label={t("connection.customerID")}
                 value={formData.customer_id}
                 onChange={handleChange}
                 required
@@ -92,7 +105,9 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
               />
             )}
             <FormControl fullWidth>
-              <InputLabel id="knowledge-select-label">Knowledge</InputLabel>
+              <InputLabel id="knowledge-select-label">
+                {t("connection.knowledge")}
+              </InputLabel>
               <Select
                 labelId="knowledge-select-label"
                 id="knowledge-select"
@@ -107,15 +122,23 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
                   }));
                 }}
                 renderValue={(selected) => {
-                  const selectedNames = selected.map(id =>
-                    datasets.find(d => String(d.id) === String(id))?.name || id
+                  const selectedNames = selected.map(
+                    (id) =>
+                      datasets.find((d) => String(d.id) === String(id))?.name ||
+                      id
                   );
-                  return selectedNames.join(', ');
+                  return selectedNames.join(", ");
                 }}
               >
                 {datasets.map((dataset) => (
                   <MenuItem key={dataset.id} value={dataset.id}>
-                    <Checkbox checked={(formData.knowledge_ids ?? []).indexOf(String(dataset.id)) > -1} />
+                    <Checkbox
+                      checked={
+                        (formData.knowledge_ids ?? []).indexOf(
+                          String(dataset.id)
+                        ) > -1
+                      }
+                    />
                     <ListItemText primary={dataset.name} />
                   </MenuItem>
                 ))}
@@ -124,9 +147,9 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Hủy</Button>
+          <Button onClick={onClose}>{t("common.cancel")}</Button>
           <Button type="submit" variant="contained" color="primary">
-            {isEdit ? 'Cập nhật' : 'Thêm'}
+            {isEdit ? t("connection.update") : t("common.add")}
           </Button>
         </DialogActions>
       </form>

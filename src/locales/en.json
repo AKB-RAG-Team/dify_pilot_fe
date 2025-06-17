@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "connections": "Manage Connections",
+    "importDoc": "Import Documents"
+  },
+  "common": {
+    "refresh": "Refresh",
+    "delete": "Delete",
+    "download": "Download",
+    "close": "Close",
+    "upload": "Upload",
+    "process": "Process",
+    "reprocess": "Reprocess",
+    "add": "Add",
+    "cancel": "Cancel"
+  },
+  "files": {
+    "title": "Import Documents",
+    "viewDatasets": "View by Dataset",
+    "viewAllFiles": "View All Files",
+    "uploadFile": "Upload File",
+    "fileList": "File List",
+    "fileName": "File Name",
+    "fileSize": "File Size",
+    "status": "Status",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "total": "Total: {{count}} files"
+  },
+  "connection": {
+    "title": "Manage Connections",
+    "addConnection": "Add Connection",
+    "name": "Name",
+    "customerID": "CustomerID",
+    "knowledge": "Knowledge",
+    "createdAt": "Created At",
+    "action": "Action",
+    "copy": "",
+    "update": "Update",
+    "delete": "Delete",
+    "update_connection": "Update Connection",
+    "add_new_connection": "Add New Connection"
+  }
+}

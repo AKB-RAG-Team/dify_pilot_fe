@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "connections": "接続管理",
+    "importDoc": "ドキュメントインポート"
+  },
+  "common": {
+    "refresh": "更新",
+    "delete": "削除",
+    "download": "ダウンロード",
+    "close": "閉じる",
+    "upload": "アップロード",
+    "process": "処理",
+    "reprocess": "再処理",
+    "add": "追加",
+    "cancel": "キャンセル"
+  },
+  "files": {
+    "title": "ドキュメントインポート",
+    "list": "ナレッジベース一覧",
+    "viewDatasets": "データセット別表示",
+    "viewAllFiles": "全ファイル表示",
+    "uploadFile": "ファイルアップロード",
+    "fileList": "ファイル一覧",
+    "fileName": "ファイル名",
+    "fileSize": "ファイルサイズ",
+    "status": "ステータス",
+    "createdAt": "作成日時",
+    "actions": "操作",
+    "total": "合計: {{count}} ファイル"
+  },
+  "connection": {
+    "title": "接続管理",
+    "addConnection": "接続を追加",
+    "name": "名前",
+    "customerID": "顧客ID",
+    "knowledge": "ナレッジ",
+    "createdAt": "作成日時",
+    "action": "操作",
+    "status": "ステータス",
+    "update": "更新",
+    "delete": "削除",
+    "update_connection": "接続を更新",
+    "add_new_connection": "新しい接続を追加"
+  }
+}

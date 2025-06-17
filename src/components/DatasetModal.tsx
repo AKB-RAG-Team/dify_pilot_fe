@@ -15,6 +15,7 @@ import { fileService } from "@/services/file.service";
 import { Dataset } from "@/types/dify";
 import { FileUpload } from "./FileUpload";
 import { FileList } from "./FileList";
+import { useTranslation } from "react-i18next";
 
 interface DatasetModalProps {
   open: boolean;
@@ -39,13 +40,15 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({
       }),
     {
       enabled: open,
-      refetchInterval: 20000,
+      // refetchInterval: 20000,
     }
   );
 
   const handleUploadSuccess = () => {
     refetchFiles();
   };
+
+  const { t } = useTranslation();
 
   return (
     <Dialog
@@ -67,7 +70,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6" gutterBottom>
-            Upload File
+            {t("files.uploadFile")}
           </Typography>
           <FileUpload
             onUploadSuccess={handleUploadSuccess}
@@ -79,7 +82,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({
 
         <Box sx={{ flexGrow: 1, minHeight: 0 }}>
           <Typography variant="h6" gutterBottom>
-            Files trong Dataset này
+            {t("files.fileList")}
           </Typography>
           <FileList
             files={filesData?.data || []}
@@ -93,7 +96,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>Đóng</Button>
+        <Button onClick={onClose}>{t("common.close")}</Button>
       </DialogActions>
     </Dialog>
   );

@@ -31,6 +31,7 @@ import {
 import { FileItem } from "@/types/file";
 import { fileService } from "@/services/file.service";
 import { useQuery } from "react-query";
+import { useTranslation } from "react-i18next";
 
 interface FileListProps {
   files: FileItem[];
@@ -64,7 +65,7 @@ export const FileList: React.FC<FileListProps> = ({
       enabled: !!selectedFileId && showChunks,
     }
   );
-
+  const { t } = useTranslation();
   const getStatusColor = (status: string) => {
     switch (status) {
       case "uploaded":
@@ -158,9 +159,7 @@ export const FileList: React.FC<FileListProps> = ({
           alignItems: "center",
         }}
       >
-        <Typography variant="h6">
-          Tổng: {pagination?.total || 0} files
-        </Typography>
+        <Typography variant="h6">{pagination?.total || 0}</Typography>
         <Button
           variant="outlined"
           startIcon={
@@ -169,7 +168,7 @@ export const FileList: React.FC<FileListProps> = ({
           onClick={onRefresh}
           disabled={isLoading}
         >
-          Refresh
+          {t("commnon.refresh")}
         </Button>
       </Box>
 
@@ -177,12 +176,12 @@ export const FileList: React.FC<FileListProps> = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Tên File</TableCell>
-              <TableCell>Kích thước</TableCell>
-              <TableCell>Trạng thái</TableCell>
+              <TableCell>{t("files.fileName")}</TableCell>
+              <TableCell>{t("files.fileSize")}</TableCell>
+              <TableCell>{t("files.status")}</TableCell>
               {showKnowledgeBaseId && <TableCell>Knowledge Base ID</TableCell>}
-              <TableCell>Ngày tạo</TableCell>
-              <TableCell>Thao tác</TableCell>
+              <TableCell>{t("files.createdAt")}</TableCell>
+              <TableCell>{t("files.actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

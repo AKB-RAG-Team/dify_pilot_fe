@@ -7,12 +7,13 @@ import { DatasetList } from "@/components/DatasetList";
 import { AllFilesList } from "@/components/AllFilesList";
 import { DatasetModal } from "@/components/DatasetModal";
 import { Dataset } from "@/types/dify";
+import { useTranslation } from "react-i18next";
 
 export const ImportDoc: React.FC = () => {
   const [viewMode, setViewMode] = useState<"datasets" | "files">("datasets");
   const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const { t } = useTranslation();
   const { data: datasets = [], isLoading: datasetsLoading } = useQuery(
     "datasets",
     () => difyService.getAllDataset()
@@ -24,7 +25,7 @@ export const ImportDoc: React.FC = () => {
     refetch: refetchAllFiles,
   } = useQuery("all-files", () => fileService.getAll(), {
     enabled: viewMode === "files",
-    refetchInterval: 20000,
+    // refetchInterval: 20000,
   });
 
   const handleDatasetClick = (dataset: Dataset) => {
@@ -40,7 +41,7 @@ export const ImportDoc: React.FC = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Import Tài liệu
+        {t("files.title")}
       </Typography>
 
       <Paper sx={{ p: 3, mb: 3 }}>
@@ -49,13 +50,13 @@ export const ImportDoc: React.FC = () => {
             variant={viewMode === "datasets" ? "contained" : "outlined"}
             onClick={() => setViewMode("datasets")}
           >
-            Xem theo Dataset
+            {t("files.viewDatasets")}
           </Button>
           <Button
             variant={viewMode === "files" ? "contained" : "outlined"}
             onClick={() => setViewMode("files")}
           >
-            Xem tất cả Files
+            {t("files.viewAllFiles")}
           </Button>
         </ButtonGroup>
       </Paper>

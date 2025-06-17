@@ -10,13 +10,13 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   {
     id: "connections",
-    title: "Quản lý Connections",
+    title: "nav.connections",
     path: "/",
     icon: LinkIcon,
   },
   {
     id: "import-doc",
-    title: "Import Tài liệu",
+    title: "nav.importDoc",
     path: "/import-doc",
     icon: ImportContacts,
   },

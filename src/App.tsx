@@ -5,6 +5,7 @@ import { createTheme } from "@mui/material/styles";
 import { Connections } from "@/pages/Connections";
 import { ImportDoc } from "./pages/ImportDoc";
 import { Navbar } from "@/components/Navbar";
+import "./i18n";
 
 const theme = createTheme({
   palette: {

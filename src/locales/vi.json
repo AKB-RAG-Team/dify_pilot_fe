@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "connections": "Quản lý Connections",
+    "importDoc": "Import Tài liệu"
+  },
+  "common": {
+    "refresh": "Refresh",
+    "delete": "Xóa",
+    "download": "Download",
+    "close": "Đóng",
+    "upload": "Upload",
+    "process": "Xử lý",
+    "reprocess": "Xử lý lại",
+    "add": "Thêm",
+    "cancel": "Hủy"
+  },
+  "files": {
+    "title": "Import Tài liệu",
+    "list": "Danh sách Knowledge Base",
+    "viewDatasets": "Xem theo Dataset",
+    "viewAllFiles": "Xem tất cả Files",
+    "uploadFile": "Upload File",
+    "fileList": "Danh sách File",
+    "fileName": "Tên File",
+    "fileSize": "Kích thước",
+    "status": "Trạng thái",
+    "createdAt": "Ngày tạo",
+    "actions": "Thao tác",
+    "total": "Tổng: {{count}} files"
+  },
+  "connection": {
+    "title": "Quản lý Connections",
+    "addConnection": "Thêm Connection",
+    "name": "Tên",
+    "customerID": "Customer ID",
+    "knowledge": "Knowledge",
+    "createdAt": "Ngày tạo",
+    "action": "Thao tác",
+    "status": "Trạng thái",
+    "update": "Cập nhật",
+    "delete": "Xóa",
+    "update_connection": "Cập nhật Connection",
+    "add_new_connection": "Thêm Connection mới"
+  }
+}
