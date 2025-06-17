@@ -1,4 +1,4 @@
-import { Link as LinkIcon, ImportContacts } from '@mui/icons-material';
+import { Link as LinkIcon, ImportContacts } from "@mui/icons-material";
 
 export interface NavItem {
   id: string;
@@ -9,15 +9,15 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   {
-    id: 'connections',
-    title: 'Quản lý Connections',
-    path: '/',
+    id: "connections",
+    title: "Quản lý Connections",
+    path: "/",
     icon: LinkIcon,
   },
   {
-    id: 'import-doc',
-    title: 'import Tài liệu',
-    path: '/import-doc',
+    id: "import-doc",
+    title: "Import Tài liệu",
+    path: "/import-doc",
     icon: ImportContacts,
   },
-]; 
+];

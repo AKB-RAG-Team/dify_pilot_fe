@@ -1,18 +1,19 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ThemeProvider, CssBaseline, Box } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
-import { Connections } from '@/pages/Connections';
-import { Navbar } from '@/components/Navbar';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
+import { Connections } from "@/pages/Connections";
+import { ImportDoc } from "./pages/ImportDoc";
+import { Navbar } from "@/components/Navbar";
 
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     secondary: {
-      main: '#dc004e',
+      main: "#dc004e",
     },
   },
 });
@@ -24,12 +25,21 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Router future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Router
+          future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "100vh",
+            }}
+          >
             <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 3, pt: 10 }}>
               <Routes>
                 <Route path="/" element={<Connections />} />
+                <Route path="/import-doc" element={<ImportDoc />} />
                 <Route path="/settings" element={<div>Cài đặt</div>} />
               </Routes>
             </Box>
@@ -40,4 +50,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
