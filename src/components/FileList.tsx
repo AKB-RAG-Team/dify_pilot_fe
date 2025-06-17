@@ -168,7 +168,7 @@ export const FileList: React.FC<FileListProps> = ({
           onClick={onRefresh}
           disabled={isLoading}
         >
-          {t("commnon.refresh")}
+          {t("common.refresh")}
         </Button>
       </Box>
 
