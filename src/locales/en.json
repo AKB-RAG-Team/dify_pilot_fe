@@ -16,6 +16,7 @@
   },
   "files": {
     "title": "Import Documents",
+    "list": "Knowledge Base List",
     "viewDatasets": "View by Dataset",
     "viewAllFiles": "View All Files",
     "uploadFile": "Upload File",
