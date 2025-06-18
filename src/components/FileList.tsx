@@ -189,9 +189,37 @@ export const FileList: React.FC<FileListProps> = ({
               <TableRow key={file.id}>
                 <TableCell>
                   <Box>
-                    <Typography variant="body2" fontWeight="medium">
-                      {file.originalName}
-                    </Typography>
+                    {file.url ? (
+                      <Typography
+                        variant="body2"
+                        fontWeight="medium"
+                        component="a"
+                        href={
+                          file.url.startsWith("http")
+                            ? file.url
+                            : `${import.meta.env.VITE_FILE_SERVICE_API_URL}${
+                                file.url
+                              }`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          textDecoration: "none",
+                          color: "primary.main",
+                          "&:hover": {
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                          },
+                        }}
+                      >
+                        {file.originalName}
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2" fontWeight="medium">
+                        {file.originalName}
+                      </Typography>
+                    )}
+                    <br />
                     <Typography variant="caption" color="text.secondary">
                       {file.filename}
                     </Typography>
